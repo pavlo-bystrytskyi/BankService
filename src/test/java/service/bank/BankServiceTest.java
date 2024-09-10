@@ -153,7 +153,7 @@ class BankServiceTest {
     }
 
     @Test
-    void splitTest_someAmount() {
+    void splitTest_addDifference() {
         BankService bankService = new BankService();
         Client john = new Client("John", "Doe", 1);
         Client jane = new Client("Jane", "Doe", 2);
@@ -166,6 +166,29 @@ class BankServiceTest {
         BigDecimal expectedFirstBalance = new BigDecimal("333.33");
         BigDecimal expectedSecondBalance = new BigDecimal("333.33");
         BigDecimal expectedThirdBalance = new BigDecimal("333.34");
+        BigDecimal actualFirstBalance = bankService.getAccount(newAccounts.get(0)).getBalance();
+        BigDecimal actualSecondBalance = bankService.getAccount(newAccounts.get(1)).getBalance();
+        BigDecimal actualThirdBalance = bankService.getAccount(newAccounts.get(2)).getBalance();
+
+        assertEquals(0, expectedFirstBalance.compareTo(actualFirstBalance));
+        assertEquals(0, expectedSecondBalance.compareTo(actualSecondBalance));
+        assertEquals(0, expectedThirdBalance.compareTo(actualThirdBalance));
+    }
+
+    @Test
+    void splitTest_removeDifference() {
+        BankService bankService = new BankService();
+        Client john = new Client("John", "Doe", 1);
+        Client jane = new Client("Jane", "Doe", 2);
+        Client alice = new Client("Alice", "Doe", 3);
+        String accountNumber = bankService.openAccount(Set.of(john, jane, alice));
+        Account account = bankService.getAccount(accountNumber);
+        account.deposit(new BigDecimal("2000.00"));
+        List<String> newAccounts = bankService.split(accountNumber);
+
+        BigDecimal expectedFirstBalance = new BigDecimal("666.67");
+        BigDecimal expectedSecondBalance = new BigDecimal("666.67");
+        BigDecimal expectedThirdBalance = new BigDecimal("666.66");
         BigDecimal actualFirstBalance = bankService.getAccount(newAccounts.get(0)).getBalance();
         BigDecimal actualSecondBalance = bankService.getAccount(newAccounts.get(1)).getBalance();
         BigDecimal actualThirdBalance = bankService.getAccount(newAccounts.get(2)).getBalance();
