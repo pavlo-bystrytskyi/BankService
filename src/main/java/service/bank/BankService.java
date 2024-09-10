@@ -4,13 +4,22 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class BankService {
+    private static int accountCounter = 0;
     private HashMap<String, Account> accounts = new HashMap<>();
 
+    public Account getAccount(String accountNumber) {
+        return accounts.get(accountNumber);
+    }
+
     public String openAccount(Client client) {
-        Account account = new Account("", new BigDecimal(0), client);
+        Account account = new Account(this.generateAccountNumber(), new BigDecimal(0), client);
         accounts.put(account.getAccountNumber(), account);
 
         return account.getAccountNumber();
+    }
+
+    private String generateAccountNumber() {
+        return String.format("%016d", ++accountCounter);
     }
 
     public void transferBalance(String senderAccountNumber, String recipientAccountNumber, BigDecimal amount) {
