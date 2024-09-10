@@ -46,6 +46,15 @@ class AccountTest {
     }
 
     @Test
+    void depositTest_incorrectAmount() {
+        Client client = new Client("John", "Doe", 1);
+        Account account = new Account("abc123", new BigDecimal("100.51"), client);
+        BigDecimal amountToAdd = new BigDecimal("99.490");
+
+        assertThrowsExactly(IllegalArgumentException.class, () -> account.deposit(amountToAdd));
+    }
+
+    @Test
     void withdrawTest_someAmount() {
         Client client = new Client("John", "Doe", 1);
         Account account = new Account("abc123", new BigDecimal("100.51"), client);
@@ -89,6 +98,15 @@ class AccountTest {
         Client client = new Client("John", "Doe", 1);
         Account account = new Account("abc123", new BigDecimal("100.51"), client);
         BigDecimal amountToWithdraw = new BigDecimal("-99.49");
+
+        assertThrowsExactly(IllegalArgumentException.class, () -> account.withdraw(amountToWithdraw));
+    }
+
+    @Test
+    void withdrawTest_incorrectAmount() {
+        Client client = new Client("John", "Doe", 1);
+        Account account = new Account("abc123", new BigDecimal("100.51"), client);
+        BigDecimal amountToWithdraw = new BigDecimal("99.490");
 
         assertThrowsExactly(IllegalArgumentException.class, () -> account.withdraw(amountToWithdraw));
     }

@@ -2,6 +2,7 @@ package service.bank;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Set;
 
 public class BankService {
     private static int accountCounter = 0;
@@ -12,7 +13,11 @@ public class BankService {
     }
 
     public String openAccount(Client client) {
-        Account account = new Account(this.generateAccountNumber(), new BigDecimal(0), client);
+        return this.openAccount(Set.of(client));
+    }
+
+    public String openAccount(Set<Client> holders) {
+        Account account = new Account(this.generateAccountNumber(), new BigDecimal(0), holders);
         accounts.put(account.getAccountNumber(), account);
 
         return account.getAccountNumber();

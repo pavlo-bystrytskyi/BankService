@@ -31,8 +31,7 @@ class BankServiceTest {
         bankService.openAccount(jane);
         Account accountJohn = bankService.getAccount(accountNumberJohn);
 
-        Client actualClient = accountJohn.getClient();
-        ;
+        Client actualClient = accountJohn.getHolders().stream().findFirst().get();
 
         assertEquals(john, actualClient);
     }
