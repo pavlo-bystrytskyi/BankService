@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -148,5 +150,28 @@ class BankServiceTest {
 
         assertEquals(0, expectedJohnBalance.compareTo(actualJohnBalance));
         assertEquals(0, expectedJaneBalance.compareTo(actualJaneBalance));
+    }
+
+    @Test
+    void splitTest_someAmount() {
+        BankService bankService = new BankService();
+        Client john = new Client("John", "Doe", 1);
+        Client jane = new Client("Jane", "Doe", 2);
+        Client alice = new Client("Alice", "Doe", 3);
+        String accountNumber = bankService.openAccount(Set.of(john, jane, alice));
+        Account account = bankService.getAccount(accountNumber);
+        account.deposit(new BigDecimal("1000.00"));
+        List<String> newAccounts = bankService.split(accountNumber);
+
+        BigDecimal expectedFirstBalance = new BigDecimal("333.33");
+        BigDecimal expectedSecondBalance = new BigDecimal("333.33");
+        BigDecimal expectedThirdBalance = new BigDecimal("333.34");
+        BigDecimal actualFirstBalance = bankService.getAccount(newAccounts.get(0)).getBalance();
+        BigDecimal actualSecondBalance = bankService.getAccount(newAccounts.get(1)).getBalance();
+        BigDecimal actualThirdBalance = bankService.getAccount(newAccounts.get(2)).getBalance();
+
+        assertEquals(0, expectedFirstBalance.compareTo(actualFirstBalance));
+        assertEquals(0, expectedSecondBalance.compareTo(actualSecondBalance));
+        assertEquals(0, expectedThirdBalance.compareTo(actualThirdBalance));
     }
 }
